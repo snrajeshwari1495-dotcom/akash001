@@ -1,0 +1,44 @@
+1) class Solution:
+    def makeGood(self, s: str) -> str:
+        stack = []
+
+        for c in s:
+            if stack and abs(ord(stack[-1]) - ord(c)) == 32:
+                stack.pop()
+            else:
+                stack.append(c)
+
+        return "".join(stack)
+
+2)# Definition for singly-linked list.
+# class ListNode:
+#     def __init__(self, val=0, next=None):
+#         self.val = val
+#         self.next = next
+
+import heapq
+
+class Solution:
+    def mergeKLists(self, lists):
+        heap = []
+        
+        for i, node in enumerate(lists):
+            if node:
+                heapq.heappush(heap, (node.val, i, node))
+        
+        dummy = ListNode(0)
+        curr = dummy
+        
+        while heap:
+            val, i, node = heapq.heappop(heap)
+            curr.next = node
+            curr = curr.next
+            
+            if node.next:
+                heapq.heappush(heap, (node.next.val, i, node.next))
+        
+        return dummy.next
+
+
+
+
