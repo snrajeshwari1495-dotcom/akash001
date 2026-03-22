@@ -1,0 +1,69 @@
+1.class Solution:
+    def gameOfLife(self, board):
+        m, n = len(board), len(board[0])
+        
+        directions = [
+            (-1, -1), (-1, 0), (-1, 1),
+            (0, -1),          (0, 1),
+            (1, -1), (1, 0), (1, 1)
+        ]
+        
+        for i in range(m):
+            for j in range(n):
+                live_neighbors = 0
+                
+                for dx, dy in directions:
+                    x, y = i + dx, j + dy
+                    if 0 <= x < m and 0 <= y < n and abs(board[x][y]) == 1:
+                        live_neighbors += 1
+                
+                if board[i][j] == 1:
+                    if live_neighbors < 2 or live_neighbors > 3:
+                        board[i][j] = -1  # live -> dead
+                else:
+                    if live_neighbors == 3:
+                        board[i][j] = 2   # dead -> live
+        
+        for i in range(m):
+            for j in range(n):
+                if board[i][j] > 0:
+                    board[i][j] = 1
+                else:
+                    board[i][j] = 0
+2.# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, val=0, left=None, right=None):
+#         self.val = val
+#         self.left = left
+#         self.right = right
+
+class Codec:
+
+    def serialize(self, root):
+        vals = []
+        
+        def dfs(node):
+            if not node:
+                vals.append("null")
+                return
+            vals.append(str(node.val))
+            dfs(node.left)
+            dfs(node.right)
+        
+        dfs(root)
+        return ",".join(vals)
+
+    def deserialize(self, data):
+        vals = iter(data.split(","))
+        
+        def dfs():
+            val = next(vals)
+            if val == "null":
+                return None
+            
+            node = TreeNode(int(val))
+            node.left = dfs()
+            node.right = dfs()
+            return node
+        
+        return dfs()
